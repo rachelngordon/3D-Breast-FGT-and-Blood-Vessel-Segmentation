@@ -61,6 +61,28 @@ Predict FGT and blood vessel masks:
 python predict.py --target-tissue dv --image MRI_DATA --input-mask INPUT_MASKS --save-masks-dir DIRECTORY_TO_SAVE_PREDICTIONS --model-save-path TRAINED_MODEL_PATH
 ```
 
+### FastMRI Adaptation
+Preprocess fastMRI Dataset:
+```
+python preprocess_fastmri.py
+```
+
+Predict Whole Breast Segmentation:
+```
+python predict.py --target-tissue breast --image /ess/scratch/scratch1/rachelgordon/3dseg_preprocessed/ --save-masks-dir /ess/scratch/scratch1/rachelgordon/3dseg_masks/ --model-save-path trained_models/breast_model.pth
+```
+
+Prepare for FGT and Blood Vessel Segmentation. Resize input images and segmentation masks (only change slice dimension):
+```
+python resize_data.py --image_dir '/ess/scratch/scratch1/rachelgordon/3dseg_preprocessed' --out_image_dir '/ess/scratch/scratch1/rachelgordon/3dseg_preprocessed_resized' --mask_dir '/ess/scratch/scratch1/rachelgordon/3dseg_masks' --out_mask_dir '/ess/scratch/scratch1/rachelgordon/3dseg_masks_resized' --target_size 320,320,96
+```
+
+Predict FGT and Blood Vessel Segmentation:
+```
+python predict.py --target-tissue dv --image /ess/scratch/scratch1/rachelgordon/3dseg_preprocessed_resized/ --input-mask /ess/scratch/scratch1/rachelgordon/3dseg_masks_resized/ --save-masks-dir /ess/scratch/scratch1/rachelgordon/3dseg_dv_masks/ --model-save-path trained_models/dv_model.pth
+```
+
+
 ### Evaluation
 To evaluate the performance of predictions, you can compare .npy files for the true and predicted masks. 
 
